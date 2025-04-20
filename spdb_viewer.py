@@ -21,7 +21,7 @@ def teardown_request(exception=None):
 def sync_db():
     g.db.sync()
     flash("Database synced successfully!", "success")
-    return redirect(url_for("index"))  # Redirect back to the index page
+    return redirect(url_for("index"))
 
 
 @app.route("/", methods=["GET", "POST"])
