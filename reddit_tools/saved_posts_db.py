@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from itertools import tee
 from pathlib import Path
-from typing import Generator
+from typing import Generator, Sequence
 
 import praw
 from praw.models import Comment, Submission
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from models import Base, Bookmark
@@ -78,3 +78,7 @@ class SavedPostsDb:
     @property
     def session(self) -> Session:
         return self.__session
+
+    @property
+    def bookmarks(self) -> Sequence[Bookmark]:
+        return self.session.scalars(select(Bookmark)).all()

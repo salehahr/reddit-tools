@@ -97,6 +97,16 @@ class Bookmark(Base):
         if tag_obj not in self.tags:
             self.tags.append(tag_obj)
 
+    @property
+    def tags_string(self) -> str:
+        if DEFAULT_TAG in (t.name for t in self.tags):
+            return ""
+        return ", ".join(tag.name for tag in self.tags)
+
+    @property
+    def date_created_string(self) -> str:
+        return self.date_created.strftime("%Y-%m-%d")
+
 
 class Tag(Base):
     __tablename__ = "tags"

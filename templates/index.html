@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.2.2/css/buttons.dataTables.css">
+  <title>Reddit saved posts</title>
+</head>
+<body>
+  <h1>Reddit saved posts</h1>
+  <h2>Bookmarks</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+  <form id="sync-form" action="{{ url_for('sync_db') }}" method="post" style="display:none;">
+  </form>
+
+  <table id="data" class="ui celled table" style="width:100%">
+    <thead>
+      <tr>
+        <th>Subreddit</th>
+        <th>Date posted</th>
+        <th>Title</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for bm in bookmarks %}
+    <tr>
+      <td>r/{{ bm.subreddit }}</td>
+      <td>{{ bm.date_created_string }} </td>
+      <td><a href="{{ bm.url }}" target="_blank">{{ bm.title }}</a></td>
+      <td>{{ bm.tags_string }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/3.2.2/js/dataTables.buttons.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/3.2.2/js/buttons.dataTables.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        layout: {
+          topStart: {
+              buttons: [
+                  {
+                      text: 'Sync',
+                      action: function () {
+                        $('#sync-form').submit();
+                      }
+                  }
+              ]
+          }
+        },
+        pageLength: 25,
+        columns: [
+          {searchable: true, orderable: true},
+          {searchable: true, orderable: true},
+          {searchable: true, orderable: false},
+          {searchable: true, orderable: false},
+          ],
+        });
+    });
+  </script>
+</body>
+</html>
